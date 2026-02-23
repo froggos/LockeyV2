@@ -68,7 +68,6 @@ class _NewNoteState extends State<NewPassword> {
       _formKey.currentState!.save();
 
       final newPassword = Password(
-        id: DateTime.now().toString(),
         accountName: _enteredAccountName,
         password: _passwordTextController.text,
         site: _enteredSite,
@@ -77,9 +76,17 @@ class _NewNoteState extends State<NewPassword> {
 
       final navigator = Navigator.of(context);
 
-      await LockeyStorage.savePassword(newPassword);
+      final generatedId = await LockeyStorage.savePassword(newPassword);
 
-      navigator.pop(newPassword);
+      final savedPassword = Password(
+          id: generatedId,
+          accountName: newPassword.accountName,
+          password: newPassword.password,
+          site: newPassword.site,
+          category: newPassword.category,
+      );
+
+      navigator.pop(savedPassword);
     }
   }
 

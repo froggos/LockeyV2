@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:lockey_app/models/category.dart';
 import 'package:lockey_app/models/password.dart';
+import 'package:lockey_app/store/database_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LockeyStorage {
+  static final _db = DatabaseHelper.instance;
+
   static Future<File> _getCategoriesFile() async {
     final dir = await getApplicationCacheDirectory();
     return File('${dir.path}/lockey-categories.json');
@@ -34,19 +37,8 @@ class LockeyStorage {
     return [];
   }
 
-  static Future<void> savePassword(Password password) async {
-    final passwords = await getPasswords();
-    passwords.add(password);
-    final file = await _getFile();
-
-    final List<Map<String, dynamic>> jsonList = [];
-
-    for(var pwd in passwords) {
-      final encryptedJson = await pwd.toJsonEncrypted();
-      jsonList.add(encryptedJson);
-    }
-
-    await file.writeAsString(jsonEncode(jsonList));
+  static Future<int> savePassword(Password password) async {
+    return await _db.savePassword(password);
   }
 
   static Future<void> deletePassword(Password password) async {

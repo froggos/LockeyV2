@@ -4,14 +4,14 @@ import 'package:lockey_app/services/encryption.dart';
 class Password {
 
   const Password({
-    required this.id,
+    this.id,
     required this.accountName,
     required this.password,
     this.site,
     this.category,
   });
 
-  final String id;
+  final int? id;
   final String accountName;
   final String password;
   final String? site;
